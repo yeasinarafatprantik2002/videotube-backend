@@ -323,6 +323,24 @@
       "name": "🎥 Videos",
       "item": [
         {
+          "name": "🤖 AI — Generate Video Metadata",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topic\": \"How to learn guitar in 30 days\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/videos/generate-metadata",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "videos", "generate-metadata"]
+            },
+            "description": "Uses OpenAI to automatically generate a catchy video title and engaging description based on the provided topic. Requires OPENAI_API_KEY to be set on the server."
+          }
+        },
+        {
           "name": "Get All Videos",
           "request": {
             "method": "GET",

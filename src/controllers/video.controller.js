@@ -8,6 +8,7 @@ import {
     uploadOnCloudinary,
     deleteFromCloudinary,
 } from "../utils/cloudinary.js";
+import { generateVideoMetadata } from "../utils/openai.js";
 import fs from "fs";
 
 const getAllVideos = asyncHandler(async (req, res) => {
@@ -378,6 +379,30 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
         );
 });
 
+const generateMetadata = asyncHandler(async (req, res) => {
+    const { topic } = req.body;
+
+    if (!topic?.trim()) {
+        throw new ApiError(400, "Topic is required");
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+        throw new ApiError(503, "AI service is not configured");
+    }
+
+    const metadata = await generateVideoMetadata(topic.trim());
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { metadata },
+                "Video metadata generated successfully"
+            )
+        );
+});
+
 export {
     getAllVideos,
     publishAVideo,
@@ -385,4 +410,5 @@ export {
     updateVideo,
     deleteVideo,
     togglePublishStatus,
+    generateMetadata,
 };

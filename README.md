@@ -68,6 +68,9 @@ REFRESH_TOKEN_EXPIRY=10d
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
+
+# Optional — required only for the AI metadata generation endpoint
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 ### 4. Run the server
@@ -123,10 +126,36 @@ All routes are prefixed with `/api/v1`.
 |--------|----------|------|-------------|
 | GET | `/` | 🔒 | Get all videos (supports `page`, `limit`, `query`, `sortBy`, `sortType`, `userId`) |
 | POST | `/` | 🔒 | Publish/upload a new video (multipart: videoFile, thumbnail) |
+| **POST** | **`/generate-metadata`** | 🔒 | **🤖 AI — Generate video title & description from a topic** |
 | GET | `/:videoId` | 🔒 | Get a specific video by ID |
 | PATCH | `/:videoId` | 🔒 | Update video title, description, or thumbnail |
 | DELETE | `/:videoId` | 🔒 | Delete a video |
 | PATCH | `/toggle/publish/:videoId` | 🔒 | Toggle published/unpublished status |
+
+#### 🤖 AI Metadata Generation — Request & Response
+
+**POST** `/api/v1/videos/generate-metadata`
+
+Request body:
+```json
+{ "topic": "How to learn guitar in 30 days" }
+```
+
+Response:
+```json
+{
+  "status": 200,
+  "message": "Video metadata generated successfully",
+  "data": {
+    "metadata": {
+      "title": "Master Guitar in 30 Days: A Beginner's Complete Roadmap",
+      "description": "Discover the fastest path to learning guitar in just 30 days with our step-by-step beginner guide. From basic chords to your first full song, we cover everything you need to go from zero to playing confidently."
+    }
+  }
+}
+```
+
+> **Note:** Requires `OPENAI_API_KEY` to be set in the environment.
 
 ---
 
